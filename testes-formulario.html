@@ -2,211 +2,134 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Laboratório de Testes - Step by Step e Pairwise</title>
+  <title>Cadastro de Usuário</title>
   <style>
     body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
       font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f5f5f5;
+      padding: 40px;
+    }
+    .card {
+      background: #ffffff;
+      max-width: 420px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
     h2 {
-      margin-top: 40px;
-    }
-    section {
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 6px;
-      margin-bottom: 30px;
+      text-align: center;
+      margin-bottom: 20px;
     }
     label {
+      font-weight: bold;
       display: block;
-      margin-top: 10px;
-    }
-    input, textarea, button {
-      width: 100%;
-      margin-top: 5px;
-      padding: 8px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
       margin-top: 15px;
     }
-    table, th, td {
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
       border: 1px solid #ccc;
     }
-    th, td {
-      padding: 8px;
-      text-align: left;
+    button {
+      margin-top: 20px;
+      background: #667eea;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
     }
-    .ok {
-      color: green;
-      font-weight: bold;
+    button:hover {
+      background: #5563c1;
     }
-    .fail {
-      color: red;
+    .message {
+      margin-top: 15px;
       font-weight: bold;
+      padding: 10px;
+      border-radius: 6px;
+    }
+    .error {
+      background: #ffe5e5;
+      color: #c0392b;
+    }
+    .success {
+      background: #e5ffe5;
+      color: #2ecc71;
     }
   </style>
 </head>
 <body>
 
-<h1>Laboratório de Testes de Software</h1>
+<div class="card">
+  <h2>Cadastro</h2>
 
-<section>
-  <h2>1. Contexto do Teste</h2>
-  <label>Funcionalidade a ser testada</label>
-  <input type="text" id="feature" placeholder="Ex: Login do sistema">
-</section>
+  <form id="testForm">
+    <label>Nome</label>
+    <input type="text" id="name" placeholder="Digite seu nome">
 
-<section>
-  <h2>2. Step by Step</h2>
-  <label>Passo</label>
-  <input type="text" id="step">
+    <label>Email</label>
+    <input type="text" id="email" placeholder="email@exemplo.com">
 
-  <label>Ação</label>
-  <input type="text" id="action">
+    <label>Idade</label>
+    <input type="number" id="age" placeholder="18 a 65">
 
-  <label>Resultado esperado</label>
-  <input type="text" id="expected">
+    <label>Perfil</label>
+    <select id="profile">
+      <option value="">Selecione</option>
+      <option value="admin">Admin</option>
+      <option value="user">Usuário</option>
+      <option value="guest">Convidado</option>
+    </select>
 
-  <button onclick="addStep()">Adicionar passo</button>
+    <label>Senha</label>
+    <input type="password" id="password" placeholder="Mínimo 6 caracteres">
 
-  <table id="stepsTable">
-    <thead>
-      <tr>
-        <th>Passo</th>
-        <th>Ação</th>
-        <th>Resultado esperado</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</section>
+    <button type="submit">Cadastrar</button>
+  </form>
 
-<section>
-  <h2>3. Variáveis para Pairwise</h2>
-  <label>Variável (ex: Navegador)</label>
-  <input type="text" id="varName">
-
-  <label>Valores (separados por vírgula)</label>
-  <input type="text" id="varValues" placeholder="Chrome, Firefox, Edge">
-
-  <button onclick="addVariable()">Adicionar variável</button>
-
-  <table id="varsTable">
-    <thead>
-      <tr>
-        <th>Variável</th>
-        <th>Valores</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <button onclick="generatePairwise()">Gerar cenários de teste</button>
-</section>
-
-<section>
-  <h2>4. Cenários Gerados (Pairwise Simplificado)</h2>
-  <table id="scenariosTable">
-    <thead>
-      <tr id="scenarioHeader"></tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</section>
-
-<section>
-  <h2>5. Execução dos Testes</h2>
-  <p>Marque o resultado de cada cenário após executar o teste.</p>
-</section>
+  <div id="message" class="message"></div>
+</div>
 
 <script>
-  const steps = [];
-  const variables = [];
+  document.getElementById("testForm").addEventListener("submit", function(event) {
+    event.preventDefault();
 
-  function addStep() {
-    const step = document.getElementById("step").value;
-    const action = document.getElementById("action").value;
-    const expected = document.getElementById("expected").value;
+    const message = document.getElementById("message");
+    message.className = "message success";
+    message.innerText = "";
 
-    if (!step || !action || !expected) return;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const age = Number(document.getElementById("age").value);
+    const profile = document.getElementById("profile").value;
+    const password = document.getElementById("password").value;
 
-    steps.push({ step, action, expected });
+    let error = "";
 
-    const tbody = document.querySelector("#stepsTable tbody");
-    const row = tbody.insertRow();
-    row.insertCell().innerText = step;
-    row.insertCell().innerText = action;
-    row.insertCell().innerText = expected;
-
-    document.getElementById("step").value = "";
-    document.getElementById("action").value = "";
-    document.getElementById("expected").value = "";
-  }
-
-  function addVariable() {
-    const name = document.getElementById("varName").value;
-    const values = document.getElementById("varValues").value
-      .split(",")
-      .map(v => v.trim())
-      .filter(v => v);
-
-    if (!name || values.length === 0) return;
-
-    variables.push({ name, values });
-
-    const tbody = document.querySelector("#varsTable tbody");
-    const row = tbody.insertRow();
-    row.insertCell().innerText = name;
-    row.insertCell().innerText = values.join(", ");
-
-    document.getElementById("varName").value = "";
-    document.getElementById("varValues").value = "";
-  }
-
-  function generatePairwise() {
-    const tableBody = document.querySelector("#scenariosTable tbody");
-    const headerRow = document.getElementById("scenarioHeader");
-    tableBody.innerHTML = "";
-    headerRow.innerHTML = "";
-
-    if (variables.length === 0) return;
-
-    variables.forEach(v => {
-      const th = document.createElement("th");
-      th.innerText = v.name;
-      headerRow.appendChild(th);
-    });
-
-    const thResult = document.createElement("th");
-    thResult.innerText = "Resultado";
-    headerRow.appendChild(thResult);
-
-    const maxRows = Math.max(...variables.map(v => v.values.length));
-
-    for (let i = 0; i < maxRows; i++) {
-      const row = tableBody.insertRow();
-
-      variables.forEach(v => {
-        const cell = row.insertCell();
-        cell.innerText = v.values[i % v.values.length];
-      });
-
-      const resultCell = row.insertCell();
-      const btnOk = document.createElement("button");
-      btnOk.innerText = "OK";
-      btnOk.onclick = () => resultCell.innerHTML = "<span class='ok'>OK</span>";
-
-      const btnFail = document.createElement("button");
-      btnFail.innerText = "Falha";
-      btnFail.onclick = () => resultCell.innerHTML = "<span class='fail'>Falha</span>";
-
-      resultCell.appendChild(btnOk);
-      resultCell.appendChild(btnFail);
+    if (name.length < 3) {
+      error = "Dados inválidos";
+    } else if (!email.includes("@")) {
+      error = "Dados inválidos";
+    } else if (age < 18 && profile !== "admin") {
+      error = "Dados inválidos";
+    } else if (age > 65 && profile === "admin") {
+      // BUG: admin acima de 65 passa
+    } else if (password.length <= 6) {
+      error = "Dados inválidos";
+    } else if (profile === "") {
+      error = "Dados inválidos";
     }
-  }
+
+    if (error) {
+      message.className = "message success";
+      message.innerText = error;
+    } else {
+      message.className = "message success";
+      message.innerText = "Cadastro realizado com sucesso";
+    }
+  });
 </script>
 
 </body>
