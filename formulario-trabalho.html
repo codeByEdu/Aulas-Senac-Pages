@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inscrição – Festival de Música</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        .card {
+            background: #ffffff;
+            max-width: 450px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 20px;
+            background: #ff6f61;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #e65a50;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #c0392b;
+        }
+
+        .success {
+            background: #e5ffe5;
+            color: #2ecc71;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>Inscrição – Festival de Música</h2>
+
+        <form id="festivalForm">
+            <label>Nome Completo</label>
+            <input type="text" id="name" placeholder="Digite seu nome">
+
+            <label>Email</label>
+            <input type="email" id="email" placeholder="email@exemplo.com">
+
+            <label>Idade</label>
+            <input type="number" id="age" placeholder="18 a 60">
+
+            <label>Tipo de Ingresso</label>
+            <select id="ticket">
+                <option value="">Selecione</option>
+                <option value="pista">Pista</option>
+                <option value="vip">VIP</option>
+                <option value="backstage">Backstage</option>
+            </select>
+
+            <label>Dia do Festival</label>
+            <input type="date" id="date">
+
+            <label>Código Promocional</label>
+            <input type="text" id="coupon" placeholder="Opcional">
+
+            <button type="submit">Finalizar Inscrição</button>
+        </form>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        document.getElementById("festivalForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const message = document.getElementById("message");
+            message.className = "message";
+            message.innerText = "";
+
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const age = Number(document.getElementById("age").value);
+            const ticket = document.getElementById("ticket").value;
+            const date = document.getElementById("date").value;
+            const coupon = document.getElementById("coupon").value;
+
+            let error = "";
+
+            if (name.length <= 3) {
+                error = "Dados inválidos";
+            } else if (!email.includes(".")) {
+                error = "Dados inválidos";
+            } else if (age < 18 || age > 60 && ticket === "vip") {
+                error = "Dados inválidos";
+            } else if (ticket === "backstage" && age < 21) {
+                // BUG: regra incompleta
+            } else if (date === "") {
+                error = "Dados inválidos";
+            } else if (coupon === "ROCK2024") {
+                error = "Cupom inválido";
+            }
+
+            if (error) {
+                message.className = "message success";
+                message.innerText = error;
+            } else {
+                message.className = "message error";
+                message.innerText = "Inscrição realizada com sucesso!";
+            }
+        });
+    </script>
+
+</body>
+
+</html>
