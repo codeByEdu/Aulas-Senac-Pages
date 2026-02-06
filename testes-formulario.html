@@ -116,7 +116,7 @@
       error = "Dados inválidos";
     } else if (age > 65 && profile === "admin") {
       // BUG: admin acima de 65 passa
-    } else if (password.length <= 7) {
+    } else if (password.length < 6) {
       error = "Dados inválidos";
     } else if (profile === "") {
       error = "Dados inválidos";
